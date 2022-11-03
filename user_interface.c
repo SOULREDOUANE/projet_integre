@@ -5,45 +5,28 @@
 // declaration des fonction 
 void input(int*,int*,char*);
 void recuperer_solde(char* ,int);
-void acheter_ticket(int* P_type_repat,int* P_nombre_ticket,char* solde,char* date);
+void acheter_ticket(int type_repat,int nombre_ticket,char* solde,int identifiant_commun);
 void password_generator(char * );
 void number_generator(char * );
-void random_number(char * code)
+void random_number(char * );
 
+
+// la fonctio main qui va afficher les resultat final
 void main(){
-    // declaration des pointeur des fichiers
-    FILE *file_user_name;
-    FILE *file_ticket;
-    FILE *file_solde;
-    // la position de les donnee de l'utilisateur dans les fichiers
+
     int identifiant_commun=1;
-    int* P_identifiant_commun;
-    P_identifiant_commun=&identifiant_commun;
     // declactation des tableau distine pour contenir les donnee des fichiers
     char user[50];
     char ticket;
     char solde;
     // declaration des entier et leur pointeur pour stocker les donnee qui sera saiser par l'utilisateur.
-    int type_repat,*P_type_repat;
-    P_type_repat=&type_repat;
-    int nombre_ticket,*P_nombre_ticket;
-    P_nombre_ticket=&nombre_ticket;
+    int type_repat;
+    int nombre_ticket;
     char date[9];
-    
-    
-
 
     
-    // printf("le resultat est:%s\n",user);
-    // fgets(user,50,file_user_name);
-    // fgets(user,50,file_user_name);
-    // fgets(user,50,file_user_name);
-    // printf("le resultat est:%s\n",user);
-    file_user_name=fopen("file.txt","r");
-    fgets(user,50,file_user_name);
-    fclose(file_user_name);
-
-
+    acheter_ticket(  type_repat,  nombre_ticket, solde, identifiant_commun);
+ 
 }
 
 
@@ -60,7 +43,7 @@ void input(int* P_type_repat,int* P_nombre_ticket, char* date){
     
 }
 
-
+// cette fonction recuper le solde de l'etudaint dans les fichier qui contient les solde
 void recuperer_solde(char* solde,int identifiant_commun){
     // declaration des pointeur des fichiers
     FILE *file_solde;
@@ -94,22 +77,6 @@ void random_number(char * code){
         }
 }
 
-// int verify(char * code){
-//     FILE * file_code;
-//     char code_seconde[12];
-//     file_code=fopen("file_code.txt","a");
-//     int c=getc(file_code);
-//     while (c=!EOF)
-//     {
-//        fgets(code_seconde,5,file_code);
-//     //    char result=strstr(code);
-       
-//     }
-        
-//     fclose(file_code);
-// }
-
-
 
 
 // cette fonction verifier si le code exit dans le fichier des codes de ticket
@@ -122,13 +89,9 @@ int verify(char * code){
     while (c !=EOF)
     {
         fgets(code_seconde,5,file_code);
-        puts(code_seconde);
         value_test=0;
         for ( int i = 0; i < 4; i++)
         {
-            printf("le code init est :%c\n",code[i]);
-            printf("le code seconde est :%c\n",code_seconde[i]);
-
             if (code[i]!=code_seconde[i])
             {
                 value_test=1;
@@ -146,22 +109,48 @@ int verify(char * code){
 }
 
 
-
 // le generateur de code de ticket
 void number_generator(char * code){
 
-               int start_test=0;
-               while (start_test==0)
-               {
+                int start_test=0;
+                while (start_test==0)
+                {
                 random_number(code);
-                verify( code) ;
-               }
-               
-               
-               
-
+                start_test=verify( code) ;
+                }
 }
 
 
 
-void acheter_ticket(int* P_type_repat,int* P_nombre_ticket,char* solde,char* date);
+void acheter_ticket( int type_repat, int nombre_ticket,char* solde,int identifiant_commun){
+        int solde_entier;
+        int prix_total;
+        int prix_ticket;
+        char code[25];
+        if (type_repat==0)
+        {
+            prix_ticket=1;
+        }
+        else
+        {
+            prix_ticket=1.5;
+        }
+        prix_total=nombre_ticket*prix_ticket;
+
+        void recuperer_solde( solde, identifiant_commun);
+
+        solde_entier=atoi(solde);
+        
+        if (solde_entier<prix_total)
+        {
+            printf("votre solde n'est pas suffisant pour affectuer cette operation.");
+        }
+        else
+        {
+            void number_generator(char * code);
+            puts(code);
+        }
+        
+        
+        
+}

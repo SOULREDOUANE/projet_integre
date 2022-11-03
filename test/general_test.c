@@ -1,15 +1,15 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
 #include<string.h>
-
+void random_number(char *);
+void number_generator(char *);
 int verify(char* );
 void main(){
-    char code[23];
-    for (int i = 0; i < 4; i++)
-    {
-        code[i]='1';
-    }
-    
-    printf("la resultat est: %d\n",verify(code));
+    char code [24];
+    number_generator(code);
+    puts(code);
+    // printf("la resultat est: %d\n",);
 
 
 }
@@ -24,13 +24,9 @@ int verify(char * code){
     while (c !=EOF)
     {
         fgets(code_seconde,5,file_code);
-        puts(code_seconde);
         value_test=0;
         for ( int i = 0; i < 4; i++)
         {
-            printf("le code init est :%c\n",code[i]);
-            printf("le code seconde est :%c\n",code_seconde[i]);
-
             if (code[i]!=code_seconde[i])
             {
                 value_test=1;
@@ -45,4 +41,35 @@ int verify(char * code){
     }
     fclose(file_code);
     return 1;
+}
+
+void number_generator(char * code){
+
+                int start_test=0;
+                while (start_test==0)
+                {
+                random_number(code);
+                start_test=verify( code) ;
+                }
+
+
+}
+
+void random_number(char * code){
+
+    char number[320];
+    
+    // generating a random number
+    srand(time(NULL));
+    sprintf(number,"%d",rand());;
+    // turning the number to 4 figures
+    
+        while (strlen(number)<4)
+        {
+            strcat(number,"0");  
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            code[i]=number[i];
+        }
 }
