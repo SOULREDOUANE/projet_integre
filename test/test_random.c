@@ -11,24 +11,16 @@ void main(){
         printf("%c",password[i]);
     }
     printf("\n");
-    puts(password);
+    // puts(password);
     
 }
-
-
-
-
-
-
-
 void password_generator(char* password){
-
     char code[320];
     // generating a random number
     srand(time(NULL));
+    
     sprintf(code,"%d",rand());;
     // turning the number to 4 figures
-    
         while (strlen(code)<4)
         {
             strcat(code,"0");  
@@ -37,8 +29,6 @@ void password_generator(char* password){
         {
             password[i]=code[i];
         }
-    
-    
-    
+
 }
   
