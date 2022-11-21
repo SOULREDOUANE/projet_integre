@@ -4,10 +4,12 @@
 #include <string.h>
 
 // declaration des fonction
+void poser_le_code_ticket(char*,char*,int,int);
+int count_taille(char*);
 void solde_replace(char* ,int );
 void input(int *, int *, char *);
 void recuperer_solde(char *, int);
-void acheter_ticket(int, int, int, char *);
+void acheter_ticket(int, int, int, char *, char*);
 void password_generator(char *);
 void number_generator(char *);
 void random_number(char *);
@@ -17,14 +19,13 @@ void main()
 {
 
     int identifiant_commun = 2;
-    // declactation des tableau distine pour contenir les donnee des fichiers
     char user[50];
     char ticket;
 
     // declaration des entier et leur pointeur pour stocker les donnee qui sera saiser par l'utilisateur.
     int type_repat;
     int nombre_ticket;
-    char date[9];
+    char date[18];
     char code[23];
 
     // printf("Donnez la date de repat que vous voulez avoiren cette forme: jeur-moi-anne(exemple: 04-06-22): ");
@@ -38,10 +39,13 @@ void main()
 
     printf("Donnez votre identifiant:");
     scanf("%d", &identifiant_commun);
+
+    printf("Donnez la date  du ticket que vous voulez acheter.sous la forme(2022-10-23):");
+    scanf("%s",date);
     
 
     // char resultat[23];
-    acheter_ticket(type_repat, nombre_ticket, identifiant_commun, code) ;
+    acheter_ticket(type_repat, nombre_ticket, identifiant_commun, code, date) ;
 
 
     for (int i = 0; i < 4; i++)
@@ -94,35 +98,33 @@ void random_number(char *code)
     {
         code[i] = number[i];
     }
+    code[4]='\0';
 }
 
 // cette fonction verifier si le code exit dans le fichier des codes de ticket
-int verify(char *code)
-{
-    FILE *file_code;
-    char code_seconde[12];
-    file_code = fopen("code_tiket.txt", "r");
-    int c = getc(file_code);
-    int value_test;
-    while (c != EOF)
+int verify(char* code){
+    FILE * file_code;
+    // char buffer[430];
+    // code_seconde[0]='a';
+   
+    int number_of_lines;
+    char buffer[232];
+
+    number_of_lines=count_taille("ticket.txt");
+    printf("le nombre des element exist dans le fichier est :%d\n",number_of_lines);
+    file_code = fopen("ticket.txt", "r"); 
+    for (int i = 0; i < number_of_lines; i++)
     {
-        fgets(code_seconde,5, file_code);
-        value_test = 0;
-        for (int i = 0; i < 4; i++)
-        {
-            if (code[i] != code_seconde[i])
-            {
-                value_test = 1;
-            }
-        }
-        if (value_test == 0)
+        
+        // fscanf(file_code,"%s",buffer);
+        fgets(buffer,100,file_code);
+
+        if (buffer[0]==code[0] && buffer[1]==code[1]&&buffer[2]==code[2]&&buffer[3]==code[3])
         {
             fclose(file_code);
             return 0;
         }
-        c = getc(file_code);
     }
-    fclose(file_code);
     return 1;
 }
 
@@ -138,7 +140,7 @@ void number_generator(char *code)
     }
 }
 
-void acheter_ticket(int type_repat, int nombre_ticket, int identifiant_commun, char *code)
+void acheter_ticket(int type_repat, int nombre_ticket, int identifiant_commun, char *code, char* date)
 {
     float solde_entier;
     float prix_total;
@@ -178,22 +180,12 @@ void acheter_ticket(int type_repat, int nombre_ticket, int identifiant_commun, c
         number_generator(code);
         // return code;
     }
+    poser_le_code_ticket(code,date,type_repat,nombre_ticket);
+
+
 }
 
-// void custum_solde(int solde_entier,int identifiant_commun){
-    
-//     FILE *open_solde;
-//     char valeur_str_solde[43];
-
-//     sprintf(valeur_str_solde,"%d",solde_entier);
-//     open_solde = fopen("solde.txt", "r");
-//    for (int i = 0; i<=identifiant_commun; i++)
-//    {
-//     fputs(valeur_str_solde,open_solde);
-//    }
-   
-// }
-
+// une fonction qui fait changer la valeur du solde dans le fichier apres qu'on fait une operation d'achat
 void solde_replace(char* solde,int identifiant_commun){
     FILE *open_main;
     FILE *open_clone;
@@ -203,14 +195,16 @@ void solde_replace(char* solde,int identifiant_commun){
 
     char  buffer[50];
     int  lines_of_file;
-    fscanf(open_main,"%d",&lines_of_file);
-    fprintf(open_clone,"%d",lines_of_file);
-    fprintf(open_clone,"%s","\n");
 
+    lines_of_file=count_taille("solde.txt");
+    printf("les ligne de la fichier sont de nombre :%d\n",lines_of_file);
+    // fscanf(open_main,"%d",&lines_of_file);
+    // fprintf(open_clone,"%d",lines_of_file);
+    fprintf(open_clone,"%s","\n");
         for (int i = 0; i < lines_of_file; i++){
         if (i<identifiant_commun)
         {
-        fscanf(open_main,"%s", buffer);
+        fscanf(open_main,"%s",buffer);
         strcat(buffer,"\n");
         fprintf(open_clone,"%s",buffer);  
         }
@@ -233,4 +227,55 @@ void solde_replace(char* solde,int identifiant_commun){
     remove("solde.txt");
     rename("solde_temp.txt","solde.txt");
     
+}
+
+// une fonction qui compte le nombres des element dans un fichiers donnee 
+int count_taille(char* file_path){
+    FILE * open_file;
+    open_file=fopen(file_path, "r");
+    int c;
+    int conteur=0;
+    char buffer[242];
+    c=fgetc(open_file);
+    fgets(buffer,123,open_file);
+    while (c !=EOF)
+    {
+    conteur++;
+    c=fgetc(open_file);
+    fgets(buffer,143,open_file);
+    }
+    fclose(open_file);
+    return conteur;
+}
+//  cette derniere fonction permet de poser le code de la ticket dans un fichiers qui contient tous les tickets
+void poser_le_code_ticket(char *code, char *date, int type_repat, int nombre_ticket)
+{
+
+    FILE *open_ticket;
+
+    char buffer[20];
+    char replacer[23];
+    replacer[0] = '-';
+    strcat(code,"-");
+    strcat(code, date);
+    printf("%s\n", code);
+
+    sprintf(buffer, "%d", type_repat);
+    strcat(replacer, buffer);
+
+    strcat(code, replacer);
+    printf("%s\n", code);
+
+    sprintf(buffer, "%d", nombre_ticket);
+    replacer[1]='\0';
+    strcat(replacer, buffer);
+    strcat(replacer, "\n");
+    strcat(code, replacer);
+    printf("%s\n", code);
+
+    open_ticket = fopen("ticket.txt", "a");
+    // fprintf(open_ticket,"%s",code);
+    fputs(code, open_ticket);
+
+    fclose(open_ticket);
 }
