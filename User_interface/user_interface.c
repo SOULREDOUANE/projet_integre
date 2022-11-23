@@ -9,7 +9,7 @@ int count_taille(char*);
 void solde_replace(char* ,int );
 void input(int *, int *, char *);
 void recuperer_solde(char *, int);
-void acheter_ticket(int, int, int, char *, char*);
+int  acheter_ticket(int, int, int, char *, char*);
 void password_generator(char *);
 void number_generator(char *);
 void random_number(char *);
@@ -45,7 +45,7 @@ void main()
     
 
     // char resultat[23];
-    acheter_ticket(type_repat, nombre_ticket, identifiant_commun, code, date) ;
+    int result=acheter_ticket(type_repat, nombre_ticket, identifiant_commun, code, date) ;
 
 
     for (int i = 0; i < 4; i++)
@@ -54,26 +54,12 @@ void main()
     }
 }
 
-// void input(int* P_type_repat,int* P_nombre_ticket, char* date){
-
-//     printf("Donnez la date de repat que vous voulez avoiren cette forme: jeur-moi-anne(exemple: 04-06-22): ");
-//     gets(date);
-
-//     printf("Donnez le repat que vous voulez avoir (entrez 0:pour le petit dejeune,1:pour le dejeuner,2:pour le denner.):");
-//     scanf("%d",P_type_repat);
-
-//     printf("Donnez le nombre de ticket que voulez acheter:");
-//     scanf("%d",P_nombre_ticket);
-
-// }
-
-// cette fonction recuper le solde de l'etudaint dans les fichier qui contient les solde
 void recuperer_solde(char *solde, int identifiant_commun)
 {
     // declaration des pointeur des fichiers
     FILE *file_solde;
     file_solde = fopen("solde.txt", "r");
-    for (int i = 0; i <= identifiant_commun+1; i++)
+    for (int i = 1; i <= identifiant_commun; i++)
     {
         fgets(solde, 17, file_solde);
     }
@@ -140,7 +126,7 @@ void number_generator(char *code)
     }
 }
 
-void acheter_ticket(int type_repat, int nombre_ticket, int identifiant_commun, char *code, char* date)
+int acheter_ticket(int type_repat, int nombre_ticket, int identifiant_commun, char *code, char* date)
 {
     float solde_entier;
     float prix_total;
@@ -169,7 +155,9 @@ void acheter_ticket(int type_repat, int nombre_ticket, int identifiant_commun, c
 
     if (solde_entier < prix_total)
     {
-        printf("votre solde n'est pas suffisant pour affectuer cette operation.");
+        printf("\n\n");
+        printf("votre solde n'est pas suffisant pour affectuer cette operation.\n\n");
+        return 0;
     }
     else
     {
@@ -181,6 +169,7 @@ void acheter_ticket(int type_repat, int nombre_ticket, int identifiant_commun, c
         // return code;
     }
     poser_le_code_ticket(code,date,type_repat,nombre_ticket);
+    return 1;
 
 
 }
@@ -200,8 +189,8 @@ void solde_replace(char* solde,int identifiant_commun){
     printf("les ligne de la fichier sont de nombre :%d\n",lines_of_file);
     // fscanf(open_main,"%d",&lines_of_file);
     // fprintf(open_clone,"%d",lines_of_file);
-    fprintf(open_clone,"%s","\n");
-        for (int i = 0; i < lines_of_file; i++){
+    // fprintf(open_clone,"%s","\n");
+        for (int i = 1; i < lines_of_file; i++){
         if (i<identifiant_commun)
         {
         fscanf(open_main,"%s",buffer);
